@@ -1,26 +1,25 @@
-<!-- resources/views/assets/show.blade.php -->
 @extends('layouts.app')
 
-@section('title', 'Detalhes do Ativo')
-
 @section('content')
-    <h1>Detalhes do Ativo</h1>
-    <ul class="list-group">
-        <li class="list-group-item"><strong>Nome:</strong> {{ $asset->name }}</li>
-        <li class="list-group-item"><strong>Descrição:</strong> {{ $asset->description }}</li>
-        <li class="list-group-item"><strong>Número de Série:</strong> {{ $asset->serial_number }}</li>
-        <li class="list-group-item"><strong>Data de Aquisição:</strong> {{ $asset->acquisition_date }}</li>
-        <li class="list-group-item"><strong>Valor de Aquisição:</strong> {{ $asset->acquisition_value }}</li>
-        <li class="list-group-item"><strong>Vida Útil:</strong> {{ $asset->useful_life }} anos</li>
-        <li class="list-group-item"><strong>Localização:</strong> {{ $asset->location }}</li>
-        <li class="list-group-item"><strong>Categoria:</strong> {{ $asset->category }}</li>
-        <li class="list-group-item"><strong>Fornecedor:</strong> {{ $asset->supplier }}</li>
-    </ul>
-    <a href="{{ route('assets.edit', $asset->id) }}" class="btn btn-warning mt-3">Editar</a>
-    <form action="{{ route('assets.destroy', $asset->id) }}" method="POST" style="display:inline;">
-        @csrf
-        @method('DELETE')
-        <button type="submit" class="btn btn-danger mt-3"
-            onclick="return confirm('Are you sure you want to delete this asset?');">Deletar</button>
-    </form>
+    <div class="container">
+        <h1>Asset Details</h1>
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">{{ $asset->name }}</h5>
+                <p class="card-text"><strong>Description:</strong> {{ $asset->description }}</p>
+                <p class="card-text"><strong>Serial Number:</strong> {{ $asset->serial_number }}</p>
+                <p class="card-text"><strong>Acquisition Date:</strong> {{ $asset->acquisition_date->format('d/m/Y') }}</p>
+                <p class="card-text"><strong>Acquisition Value:</strong> {{ $asset->acquisition_value }}</p>
+                <p class="card-text"><strong>Useful Life:</strong> {{ $asset->useful_life }} years</p>
+                <p class="card-text"><strong>Location:</strong> {{ $asset->location }}</p>
+                <p class="card-text"><strong>Category:</strong> {{ $asset->category }}</p>
+                <p class="card-text"><strong>Supplier:</strong> {{ $asset->supplier }}</p>
+                <p class="card-text"><strong>State:</strong> {{ ucfirst(str_replace('_', ' ', $asset->state)) }}</p>
+                <p class="card-text"><strong>User:</strong> {{ $asset->user ? $asset->user->name : 'None' }}</p>
+                <p class="card-text"><strong>Scrapped:</strong> {{ $asset->is_scrapped ? 'Yes' : 'No' }}</p>
+                <a href="{{ route('assets.edit', $asset) }}" class="btn btn-warning">Edit</a>
+                <a href="{{ route('assets.index') }}" class="btn btn-secondary">Back to List</a>
+            </div>
+        </div>
+    </div>
 @endsection

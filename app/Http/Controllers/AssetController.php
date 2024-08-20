@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Asset;
+use App\Models\AssetMovement;
 use Illuminate\Http\Request;
+use App\Models\User;
 
 class AssetController extends Controller
 {
@@ -21,7 +23,8 @@ class AssetController extends Controller
      */
     public function create()
     {
-        return view('assets.create');
+        $users = User::all(); // Obtém todos os usuários
+        return view('assets.create', compact('users'));
     }
 
     /**
@@ -39,9 +42,34 @@ class AssetController extends Controller
             'location' => 'required|string|max:255',
             'category' => 'required|string|max:255',
             'supplier' => 'required|string|max:255',
+            'state' => 'required|in:in_use,stored,to_be_scrapped',
+            'user_id' => 'nullable|exists:users,id',
+            'is_scrapped' => 'boolean',
         ]);
+        // Asset::create($validated);
+        // return redirect()->route('assets.index')->with('success', 'Asset created successfully.');
+        // Verifique se há um ativo existente com o mesmo número de série
+        $existingAsset = Asset::where('serial_number', $validated['serial_number'])->first();
 
-        Asset::create($validated);
+        if ($existingAsset) {
+            // Se um ativo com o mesmo número de série já existir, registre o movimento
+            if ($existingAsset->location !== $validated['location']) {
+                AssetMovement::create([
+                    'asset_id' => $existingAsset->id,
+                    'old_location' => $existingAsset->location,
+                    'new_location' => $validated['location'],
+                    'moved_at' => now(),
+                    'notes' => 'Localização atualizada',
+                ]);
+            }
+
+            // Atualize o ativo existente
+            $existingAsset->update($validated);
+        } else {
+            // Se o ativo não existir, crie um novo ativo
+            Asset::create($validated);
+        }
+
         return redirect()->route('assets.index')->with('success', 'Asset created successfully.');
     }
 
@@ -58,7 +86,8 @@ class AssetController extends Controller
      */
     public function edit(Asset $asset)
     {
-        return view('assets.edit', compact('asset'));
+        $users = User::all(); // Obtém todos os usuários
+        return view('assets.edit', compact('asset', 'users'));
     }
 
     /**
@@ -76,6 +105,9 @@ class AssetController extends Controller
             'location' => 'required|string|max:255',
             'category' => 'required|string|max:255',
             'supplier' => 'required|string|max:255',
+            'state' => 'required|in:in_use,stored,to_be_scrapped',
+            'user_id' => 'nullable|exists:users,id',
+            'is_scrapped' => 'boolean',
         ]);
 
         $asset->update($validated);

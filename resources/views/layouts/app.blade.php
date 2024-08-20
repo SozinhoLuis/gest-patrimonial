@@ -13,6 +13,13 @@
     <!-- CSS Global -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     <link href="{{ asset('css/custom.css') }}"rel="stylesheet">
+    <style>
+        .mt-4,
+        .my-4 {
+            margin-top: 6.5rem !important;
+            margin-bottom: 6rem !important;
+        }
+    </style>
 </head>
 
 <body>
