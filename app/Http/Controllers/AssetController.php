@@ -90,4 +90,22 @@ class AssetController extends Controller
         $asset->delete();
         return redirect()->route('assets.index')->with('success', 'Asset deleted successfully.');
     }
+
+    public function dashboard()
+    {
+        $totalAssets = Asset::count();
+        $totalCategories = Asset::distinct('category')->count();
+
+        $categories = Asset::select('category')->distinct()->pluck('category');
+        $assetsByCategory = Asset::selectRaw('category, COUNT(*) as count')
+            ->groupBy('category')
+            ->pluck('count', 'category');
+
+        $locations = Asset::select('location')->distinct()->pluck('location');
+        $assetsByLocation = Asset::selectRaw('location, COUNT(*) as count')
+            ->groupBy('location')
+            ->pluck('count', 'location');
+
+        return view('welcome', compact('totalAssets', 'totalCategories', 'categories', 'assetsByCategory', 'locations', 'assetsByLocation'));
+    }
 }

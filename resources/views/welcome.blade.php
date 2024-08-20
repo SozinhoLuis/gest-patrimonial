@@ -1,71 +1,129 @@
-<!DOCTYPE html>
-<html lang="en">
+@extends('layouts.app')
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Página Principal</title>
-    <!-- Bootstrap CSS -->
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Font Awesome -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
-</head>
+@section('title', 'Dashboard')
 
-<body>
-
-    <!-- Navigation Bar -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <a class="navbar-brand" href="#">Sistema de Gestão de Ativos</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
-            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav ml-auto">
-                <li class="nav-item active">
-                    <a class="nav-link" href="#">Início <span class="sr-only">(current)</span></a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ url('/assets') }}">
-                        cadastrar Ativos
-                    </a>
-
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Relatórios</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Configurações</a>
-                </li>
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
-                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <img src="https://via.placeholder.com/40" class="rounded-circle" alt="Avatar"> Usuário
-                    </a>
-                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userDropdown">
-                        <a class="dropdown-item" href="#">Perfil</a>
-                        <a class="dropdown-item" href="#">Sair</a>
-                    </div>
-                </li>
-            </ul>
+@section('content')
+    <div class="container-fluid">
+        <div class="row" style="margin-top: 3.5rem !important;">
+            <!-- Painel de Resumo -->
+            <div class="col-lg-12">
+                <h2 class="mt-4">Dashboard</h2>
+                <p>Visão geral das estatísticas dos ativos.</p>
+            </div>
         </div>
-    </nav>
 
-    <!-- Main Content -->
-    <div class="container mt-4">
-        <h1>Bem-vindo ao Sistema de Gestão de Ativos</h1>
-        <p>Este é o seu painel principal. Aqui você pode acessar e gerenciar todos os seus ativos.</p>
+        <div class="row">
+            <!-- Cartão de Resumo -->
+            <div class="col-lg-3 col-md-6 mb-4">
+                <div class="card bg-primary text-white h-100">
+                    <div class="card-body">
+                        <h5 class="card-title">Total de Ativos</h5>
+                        <p class="card-text display-4">{{ $totalAssets }}</p>
+                    </div>
+                    <div class="card-footer">
+                        <a href="{{ url('/assets') }}" class="text-white">Ver Todos</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-3 col-md-6 mb-4">
+                <div class="card bg-success text-white h-100">
+                    <div class="card-body">
+                        <h5 class="card-title">Ativos por Categoria</h5>
+                        <p class="card-text display-4">{{ $totalCategories }}</p>
+                    </div>
+                    <div class="card-footer">
+                        <a href="#" class="text-white">Ver Detalhes</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Outros Cartões de Resumo -->
+            <!-- Adicione mais cartões de resumo conforme necessário -->
+        </div>
+
+        <div class="row mt-4">
+            <!-- Gráfico de Ativos por Categoria -->
+            <div class="col-lg-6 mb-4">
+                <div class="card">
+                    <div class="card-header">
+                        Ativos por Categoria
+                    </div>
+                    <div class="card-body">
+                        <canvas id="assetsByCategoryChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Gráfico de Ativos por Localização -->
+            <div class="col-lg-6 mb-4">
+                <div class="card">
+                    <div class="card-header">
+                        Ativos por Localização
+                    </div>
+                    <div class="card-body">
+                        <canvas id="assetsByLocationChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Adicione mais gráficos ou seções conforme necessário -->
     </div>
+@endsection
 
-    <!-- Footer -->
-    <footer class="bg-dark text-white text-center py-3 mt-auto">
-        <p>&copy; 2024 Sistema de Gestão de Ativos. Todos os direitos reservados.</p>
-    </footer>
+@section('scripts')
+    <!-- Inclua a biblioteca Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-    <!-- Scripts -->
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-</body>
+    <script>
+        // Dados para o gráfico de Ativos por Categoria
+        var ctxCategory = document.getElementById('assetsByCategoryChart').getContext('2d');
+        var assetsByCategoryChart = new Chart(ctxCategory, {
+            type: 'bar',
+            data: {
+                labels: {!! json_encode($categories) !!},
+                datasets: [{
+                    label: 'Quantidade',
+                    data: {!! json_encode($assetsByCategory) !!},
+                    backgroundColor: 'rgba(54, 162, 235, 0.5)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
 
-</html>
+        // Dados para o gráfico de Ativos por Localização
+        var ctxLocation = document.getElementById('assetsByLocationChart').getContext('2d');
+        var assetsByLocationChart = new Chart(ctxLocation, {
+            type: 'pie',
+            data: {
+                labels: {!! json_encode($locations) !!},
+                datasets: [{
+                    label: 'Quantidade',
+                    data: {!! json_encode($assetsByLocation) !!},
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.5)',
+                        'rgba(54, 162, 235, 0.5)',
+                        'rgba(255, 206, 86, 0.5)',
+                        'rgba(75, 192, 192, 0.5)',
+                        'rgba(153, 102, 255, 0.5)',
+                    ],
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true
+            }
+        });
+    </script>
+@endsection

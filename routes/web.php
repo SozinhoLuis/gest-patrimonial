@@ -9,3 +9,4 @@ Route::get('/', function () {
     return view('welcome');
 });
 Route::resource('assets', AssetController::class);
+Route::get('/', [AssetController::class, 'dashboard'])->name('dashboard');
