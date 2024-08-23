@@ -40,7 +40,12 @@
                 </a>
                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userDropdown">
                     <a class="dropdown-item" href="#">Perfil</a>
-                    <a class="dropdown-item" href="#">Sair</a>
+
+                    <form action="{{ route('logout') }}" method="POST" style="display:inline;">
+                        @csrf
+                        <button type="submit" class="dropdown-item">Sair</button>
+                    </form>
+                    {{-- <a class="dropdown-item" href="{{ route('logout') }}">Sair</a> --}}
                 </div>
             </li>
         </ul>
