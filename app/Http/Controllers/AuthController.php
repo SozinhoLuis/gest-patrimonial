@@ -2,32 +2,44 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Laravel\Sanctum\HasApiTokens;
 
 class AuthController extends Controller
 {
-
-    use HasApiTokens;
-
-    public function showLogin(Request $request)
+    public function showLogin()
     {
-        return view("login");
+        return view('login');
     }
 
     public function login(Request $request)
     {
-        $credentials = $request->only('email', 'password');
+        $credentials = $request->validate([
+            'email' => ['required', 'email'],
+            'password' => ['required'],
+        ]);
 
         if (Auth::attempt($credentials)) {
-            $user = Auth::user();
-            $token = $user->createToken('MyApp');
+            $request->session()->regenerate();
 
-            return redirect('/');
+            return response()->json(['success' => true]);
         }
 
-        return response()->json(['error' => 'Invalid credentials'], 401);
+
+        return response()->json([
+            'success' => false,
+            'message' => 'The provided credentials do not match our records.',
+        ], 422);
+    }
+
+    public function logout(Request $request)
+    {
+        Auth::logout();
+
+        $request->session()->invalidate();
+
+        $request->session()->regenerateToken();
+
+        return redirect('/');
     }
 }
