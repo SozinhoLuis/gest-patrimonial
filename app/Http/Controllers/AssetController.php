@@ -129,12 +129,12 @@ class AssetController extends Controller
         $totalCategories = Asset::distinct('category')->count();
 
         $categories = Asset::select('category')->distinct()->pluck('category');
-        $assetsByCategory = Asset::selectRaw('category, COUNT(*) as count')
+        $ativosByCategory = Asset::selectRaw('category, COUNT(*) as count')
             ->groupBy('category')
             ->pluck('count', 'category');
 
         $locations = Asset::select('location')->distinct()->pluck('location');
-        $assetsByLocation = Asset::selectRaw('location, COUNT(*) as count')
+        $ativosByLocation = Asset::selectRaw('location, COUNT(*) as count')
             ->groupBy('location')
             ->pluck('count', 'location');
 
