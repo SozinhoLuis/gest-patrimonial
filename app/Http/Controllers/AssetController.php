@@ -18,6 +18,26 @@ class AssetController extends Controller
         return view('ativos.index', compact('ativos'));
     }
 
+    public function ativosData()
+    {
+        $ativos = Asset::orderBy('created_at', 'desc')->get();
+
+        $json['data'] = [];
+
+        foreach ($ativos as $key => $ativo) {
+
+            $json['data'][] = [
+                ++$key,
+                $ativo->name,
+                $ativo->serial_number,
+                $ativo->category,
+                $ativo->id
+            ];
+        }
+
+        return $json;
+    }
+
     /**
      * Show the form for creating a new resource.
      */

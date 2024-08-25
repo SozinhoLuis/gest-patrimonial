@@ -14,6 +14,7 @@ Route::get('/', function () {
 });
 Route::resource('asset_movements', AssetMovementController::class);
 Route::resource('ativos', AssetController::class);
+Route::get('ativos_data', [AssetController::class, 'ativosData']);
 Route::get('/', [AssetController::class, 'dashboard'])->name('dashboard');
 Route::resource('physical_inventories', PhysicalInventoryController::class);
 Route::resource('users', UserController::class);

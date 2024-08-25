@@ -7,6 +7,32 @@
     <h1>Bem-vindo ao Sistema de Gestão de Ativos</h1>
     <p>Este é o seu painel principal. Aqui você pode acessar e gerenciar todos os seus ativos.</p>
     <a href="{{ route('ativos.create') }}" class="btn btn-primary">Create New Asset</a>
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">Ativos</div>
+                </div>
+                <div class="card-body">
+                    <table class="table table-striped mt-3" id="ativosTable" width="100%" cellspacing="0">
+                        <thead>
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">Name</th>
+                                <th scope="col">Serial Number</th>
+                                <th scope="col">Category</th>
+                                <th scope="col">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <table class="table mt-4">
         <thead>
             <tr>
@@ -36,4 +62,8 @@
             @endforeach
         </tbody>
     </table>
+@endsection
+
+@section('script')
+    <script src="{{ asset('js/ativos.js') }}"></script>
 @endsection
