@@ -14,8 +14,8 @@ class AssetController extends Controller
      */
     public function index()
     {
-        $assets = Asset::all();
-        return view('assets.index', compact('assets'));
+        $ativos = Asset::all();
+        return view('ativos.index', compact('ativos'));
     }
 
     /**
@@ -24,7 +24,7 @@ class AssetController extends Controller
     public function create()
     {
         $users = User::all(); // Obtém todos os usuários
-        return view('assets.create', compact('users'));
+        return view('ativos.create', compact('users'));
     }
 
     /**
@@ -47,7 +47,7 @@ class AssetController extends Controller
             'is_scrapped' => 'boolean',
         ]);
         // Asset::create($validated);
-        // return redirect()->route('assets.index')->with('success', 'Asset created successfully.');
+        // return redirect()->route('ativos.index')->with('success', 'Asset created successfully.');
         // Verifique se há um ativo existente com o mesmo número de série
         $existingAsset = Asset::where('serial_number', $validated['serial_number'])->first();
 
@@ -70,7 +70,7 @@ class AssetController extends Controller
             Asset::create($validated);
         }
 
-        return redirect()->route('assets.index')->with('success', 'Asset created successfully.');
+        return redirect()->route('ativos.index')->with('success', 'Asset created successfully.');
     }
 
     /**
@@ -78,7 +78,7 @@ class AssetController extends Controller
      */
     public function show(Asset $asset)
     {
-        return view('assets.show', compact('asset'));
+        return view('ativos.show', compact('asset'));
     }
 
     /**
@@ -87,7 +87,7 @@ class AssetController extends Controller
     public function edit(Asset $asset)
     {
         $users = User::all(); // Obtém todos os usuários
-        return view('assets.edit', compact('asset', 'users'));
+        return view('ativos.edit', compact('asset', 'users'));
     }
 
     /**
@@ -111,7 +111,7 @@ class AssetController extends Controller
         ]);
 
         $asset->update($validated);
-        return redirect()->route('assets.index')->with('success', 'Asset updated successfully.');
+        return redirect()->route('ativos.index')->with('success', 'Asset updated successfully.');
     }
 
     /**
@@ -120,7 +120,7 @@ class AssetController extends Controller
     public function destroy(Asset $asset)
     {
         $asset->delete();
-        return redirect()->route('assets.index')->with('success', 'Asset deleted successfully.');
+        return redirect()->route('ativos.index')->with('success', 'Asset deleted successfully.');
     }
 
     public function dashboard()
@@ -138,6 +138,6 @@ class AssetController extends Controller
             ->groupBy('location')
             ->pluck('count', 'location');
 
-        return view('welcome', compact('totalAssets', 'totalCategories', 'categories', 'assetsByCategory', 'locations', 'assetsByLocation'));
+        return view('dashboard', compact('totalAssets', 'totalCategories', 'categories', 'ativosByCategory', 'locations', 'ativosByLocation'));
     }
 }

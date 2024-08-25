@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Inventários Físicos')
+{{-- @section('title', 'Inventários Físicos') --}}
 
 @section('content')
     <div class="container">
